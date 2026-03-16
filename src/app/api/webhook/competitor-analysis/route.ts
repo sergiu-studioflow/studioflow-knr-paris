@@ -14,10 +14,6 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { requestId, status, report, analyzedAds, scrapedAds, creativeBriefs } = body;
 
-  if (!requestId) {
-    return NextResponse.json({ error: "requestId is required" }, { status: 400 });
-  }
-
   // Save scraped ads
   if (scrapedAds && Array.isArray(scrapedAds)) {
     for (const ad of scrapedAds) {
@@ -137,15 +133,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Update lookup request status + link report
-  const updates: Record<string, unknown> = { updatedAt: new Date() };
-  if (status) updates.status = status;
-  if (reportId) updates.resultReportId = reportId;
+  // Update lookup request status + link report (only if requestId provided — scheduled runs skip this)
+  if (requestId) {
+    const updates: Record<string, unknown> = { updatedAt: new Date() };
+    if (status) updates.status = status;
+    if (reportId) updates.resultReportId = reportId;
 
-  await db
-    .update(schema.competitorLookupRequests)
-    .set(updates)
-    .where(eq(schema.competitorLookupRequests.id, requestId));
+    await db
+      .update(schema.competitorLookupRequests)
+      .set(updates)
+      .where(eq(schema.competitorLookupRequests.id, requestId));
+  }
 
   return NextResponse.json({ success: true, reportId });
 }
