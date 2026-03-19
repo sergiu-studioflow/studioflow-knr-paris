@@ -63,6 +63,22 @@ export async function POST(request: NextRequest) {
     })
     .returning();
 
+  // Fetch competitor details (if Competitor mode) to send full context to n8n
+  let competitorDetails: Record<string, unknown> | null = null;
+  if (record.competitorId) {
+    const [comp] = await db
+      .select({
+        competitorName: schema.competitors.competitorName,
+        metaSearchTerms: schema.competitors.metaSearchTerms,
+        metaPageId: schema.competitors.metaPageId,
+        tiktokHandle: schema.competitors.tiktokHandle,
+        platforms: schema.competitors.platforms,
+      })
+      .from(schema.competitors)
+      .where(eq(schema.competitors.id, record.competitorId));
+    if (comp) competitorDetails = comp;
+  }
+
   // Fire-and-forget webhook to n8n
   const webhookUrl = `${process.env.N8N_BASE_URL}/webhook/knr-competitor-lookup`;
   fetch(webhookUrl, {
@@ -77,6 +93,13 @@ export async function POST(request: NextRequest) {
       brandName: record.brandName,
       country: record.country,
       maxAds: record.maxAds,
+      ...(competitorDetails && {
+        competitorName: competitorDetails.competitorName,
+        metaSearchTerms: competitorDetails.metaSearchTerms,
+        metaPageId: competitorDetails.metaPageId,
+        tiktokHandle: competitorDetails.tiktokHandle,
+        platforms: competitorDetails.platforms,
+      }),
     }),
   }).catch(() => {});
 
