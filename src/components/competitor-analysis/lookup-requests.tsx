@@ -99,12 +99,10 @@ export function LookupRequests() {
     setSelected(selected.size === rows.length ? new Set() : new Set(rows.map((r) => r.id)));
   }
 
-  const grouped = competitors.reduce<Record<string, Competitor[]>>((acc, c) => {
-    const key = c.brandName || "No Brand";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(c);
-    return acc;
-  }, {});
+  // Filter competitors by selected brand (only active ones)
+  const filteredCompetitors = brandId
+    ? competitors.filter((c) => c.brandId === brandId && c.isActive)
+    : [];
 
   return (
     <div className="space-y-6">
@@ -129,6 +127,28 @@ export function LookupRequests() {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            {/* Brand is always first — required in Competitor mode, optional in Category mode */}
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                Brand{lookupMode === "Competitor" ? " *" : " Context"}
+              </label>
+              <select
+                value={brandId}
+                onChange={(e) => {
+                  setBrandId(e.target.value);
+                  // Reset competitor when brand changes
+                  if (lookupMode === "Competitor") setCompetitorId("");
+                }}
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/20"
+                required={lookupMode === "Competitor"}
+              >
+                <option value="">{lookupMode === "Competitor" ? "-- Select Brand First --" : "-- Optional --"}</option>
+                {brands.map((b) => (
+                  <option key={b.id} value={b.id}>{b.brandName}</option>
+                ))}
+              </select>
+            </div>
+
             {lookupMode === "Competitor" ? (
               <div>
                 <label className="mb-1 block text-xs font-medium text-muted-foreground">Competitor *</label>
@@ -137,16 +157,16 @@ export function LookupRequests() {
                   onChange={(e) => setCompetitorId(e.target.value)}
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/20"
                   required
+                  disabled={!brandId}
                 >
-                  <option value="">-- Select Competitor --</option>
-                  {Object.entries(grouped).map(([brand, comps]) => (
-                    <optgroup key={brand} label={brand}>
-                      {comps.filter((c) => c.isActive).map((c) => (
-                        <option key={c.id} value={c.id}>{c.competitorName}</option>
-                      ))}
-                    </optgroup>
+                  <option value="">{brandId ? "-- Select Competitor --" : "-- Select a brand first --"}</option>
+                  {filteredCompetitors.map((c) => (
+                    <option key={c.id} value={c.id}>{c.competitorName}</option>
                   ))}
                 </select>
+                {brandId && filteredCompetitors.length === 0 && (
+                  <p className="mt-1 text-xs text-muted-foreground">No competitors saved for this brand yet.</p>
+                )}
               </div>
             ) : (
               <div>
@@ -160,19 +180,6 @@ export function LookupRequests() {
                 />
               </div>
             )}
-            <div>
-              <label className="mb-1 block text-xs font-medium text-muted-foreground">Brand Context</label>
-              <select
-                value={brandId}
-                onChange={(e) => setBrandId(e.target.value)}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/20"
-              >
-                <option value="">-- Optional --</option>
-                {brands.map((b) => (
-                  <option key={b.id} value={b.id}>{b.brandName}</option>
-                ))}
-              </select>
-            </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-muted-foreground">Country</label>
               <input
