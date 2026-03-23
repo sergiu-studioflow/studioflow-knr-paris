@@ -1,4 +1,4 @@
-import { BrandDocSection } from "@/components/brand-intel/brand-doc-section";
+import { BrandIntelPage } from "@/components/brand-intel/brand-intel-page";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +10,11 @@ export default function BrandIntelligencePage() {
           Brand Intelligence
         </h1>
         <p className="mt-2 text-base text-muted-foreground">
-          View and manage the brand knowledge base and intelligence documents.
+          Brand knowledge base across all client brands. Synced from Notion.
         </p>
       </div>
 
-      <BrandDocSection />
+      <BrandIntelPage />
     </div>
   );
 }

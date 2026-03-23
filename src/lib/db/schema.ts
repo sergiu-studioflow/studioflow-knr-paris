@@ -83,15 +83,18 @@ export const appConfig = pgTable("app_config", {
 });
 
 // =============================================
-// BRAND INTELLIGENCE (single row)
+// BRAND INTELLIGENCE (per-brand, multi-row)
 // =============================================
 
 export const brandIntelligence = pgTable("brand_intelligence", {
   id: uuid("id").primaryKey().defaultRandom(),
-  title: text("title").notNull().default("Brand Intelligence"),
+  brandId: uuid("brand_id").references(() => brands.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  type: text("type"), // Brand Identity, Products, Target Audience, Voice & Tone, Compliance, Visual Direction, Competitive Landscape
   rawContent: text("raw_content"),
   sections: jsonb("sections"),
-  airtableRecordId: text("airtable_record_id"),
+  notionPageId: text("notion_page_id"),
+  ownerName: text("owner_name"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

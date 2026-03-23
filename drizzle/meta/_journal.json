@@ -8,6 +8,13 @@
       "when": 1741305600000,
       "tag": "0000_core_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742745600000,
+      "tag": "0001_brand_intelligence_multi_brand",
+      "breakpoints": true
     }
   ]
 }
