@@ -12,6 +12,8 @@
     "seed": "npx tsx scripts/seed-client.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1030.0",
+    "@aws-sdk/s3-request-presigner": "^3.1030.0",
     "@better-auth/drizzle-adapter": "^1.5.3",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",

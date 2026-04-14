@@ -106,6 +106,7 @@ export const brandIntelligence = pgTable("brand_intelligence", {
 export const activityLog = pgTable("activity_log", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").references(() => users.id),
+  clientId: uuid("client_id"),
   action: text("action").notNull(),
   resourceType: text("resource_type").notNull(),
   resourceId: uuid("resource_id"),
@@ -120,14 +121,29 @@ export const activityLog = pgTable("activity_log", {
 export const brands = pgTable("brands", {
   id: uuid("id").primaryKey().defaultRandom(),
   brandName: text("brand_name").notNull(),
+  clientSlug: text("slug").unique(),
   brandCluster: text("brand_cluster"),
   vertical: text("vertical"),
   language: text("language").notNull().default("fr"),
+  website: text("website"),
+  category: text("category"),
+  primaryMarket: text("primary_market"),
+  currency: text("currency"),
+  logoUrl: text("logo_url"),
+  brandColor: text("brand_color"),
+  monthlyAdSpend: integer("monthly_ad_spend"),
   isActive: boolean("is_active").notNull().default(true),
+  status: text("status").notNull().default("Active"),
+  storagePrefix: text("storage_prefix").notNull().default(""),
+  settings: jsonb("settings").notNull().default({}),
   notes: text("notes"),
+  provisionedAt: timestamp("provisioned_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+// Alias: template code references schema.clients
+export const clients = brands;
 
 // =============================================
 // COMPETITORS (who to track per brand)
@@ -287,6 +303,86 @@ export const creativeBriefs = pgTable("creative_briefs", {
   complianceNotes: text("compliance_notes"),
   inspiredBy: text("inspired_by"),
   differentiation: text("differentiation"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// =============================================
+// MULTI-CLIENT MODULE SUB-RESOURCE TABLES
+// =============================================
+
+export const clientBrandIntelligence = pgTable("client_brand_intelligence", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  content: text("content"),
+  sectionType: text("section_type"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const clientProducts = pgTable("client_products", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  productName: text("product_name").notNull(),
+  category: text("category"),
+  keyBenefits: text("key_benefits"),
+  targetUseCase: text("target_use_case"),
+  isHeroProduct: boolean("is_hero_product").notNull().default(false),
+  price: text("price"),
+  productUrl: text("product_url"),
+  imageUrl: text("image_url"),
+  status: text("status").notNull().default("Active"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const clientUsps = pgTable("client_usps", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  uspText: text("usp_text").notNull(),
+  uspCategory: text("usp_category"),
+  isPrimary: boolean("is_primary").notNull().default(false),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const clientCreativeDna = pgTable("client_creative_dna", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  attributeName: text("attribute_name").notNull(),
+  attributeType: text("attribute_type").notNull(),
+  allowedValues: text("allowed_values"),
+  defaultValue: text("default_value"),
+  isRequired: boolean("is_required").notNull().default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const clientCompetitors = pgTable("client_competitors", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  competitorName: text("competitor_name").notNull(),
+  metaPageId: text("meta_page_id"),
+  metaSearchTerms: text("meta_search_terms"),
+  tiktokHandle: text("tiktok_handle"),
+  instagramHandle: text("instagram_handle"),
+  websiteUrl: text("website_url"),
+  competitorType: text("competitor_type"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const clientResearchSources = pgTable("client_research_sources", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  sourceType: text("source_type").notNull(),
+  identifier: text("identifier").notNull(),
+  isActive: boolean("is_active").notNull().default(true),
+  lastScrapedAt: timestamp("last_scraped_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
