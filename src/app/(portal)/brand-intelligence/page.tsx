@@ -23,8 +23,6 @@ export default function BrandIntelligencePage() {
 
         <ClientBrandIntelEditor clientSlug={clientSlug} />
 
-        <div className="h-px bg-border/50" />
-
         <ClientProductsTable clientSlug={clientSlug} />
       </div>
     );
