@@ -64,7 +64,7 @@ export type Brand = {
 export type Client = Brand & { clientName: string; cluster?: string | null };
 
 export type ClientBrandIntel = { id: string; clientId: string; title: string; content: string | null; sectionType: string | null; sortOrder: number; createdAt: Date; updatedAt: Date };
-export type ClientProduct = { id: string; clientId: string; productName: string; category: string | null; keyBenefits: string | null; targetUseCase: string | null; isHeroProduct: boolean; price: string | null; productUrl: string | null; imageUrl: string | null; status: string; createdAt: Date; updatedAt: Date };
+export type ClientProduct = { id: string; clientId: string; productName: string; category: string | null; keyBenefits: string | null; targetUseCase: string | null; isHeroProduct: boolean; price: string | null; productUrl: string | null; imageUrl: string | null; videoImageUrl: string | null; status: string; createdAt: Date; updatedAt: Date };
 export type ClientUsp = { id: string; clientId: string; uspText: string; uspCategory: string | null; isPrimary: boolean; notes: string | null; createdAt: Date; updatedAt: Date };
 export type ClientCompetitor = { id: string; clientId: string; competitorName: string; metaPageId: string | null; metaSearchTerms: string | null; tiktokHandle: string | null; instagramHandle: string | null; websiteUrl: string | null; competitorType: string | null; isActive: boolean; createdAt: Date; updatedAt: Date };
 export type ClientCreativeDna = { id: string; clientId: string; attributeName: string; attributeType: string; allowedValues: string | null; defaultValue: string | null; isRequired: boolean; createdAt: Date; updatedAt: Date };

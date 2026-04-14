@@ -333,6 +333,7 @@ export const clientProducts = pgTable("client_products", {
   price: text("price"),
   productUrl: text("product_url"),
   imageUrl: text("image_url"),
+  videoImageUrl: text("video_image_url"),
   status: text("status").notNull().default("Active"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
