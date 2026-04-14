@@ -108,6 +108,18 @@ export function PortalSidebar({ brandName, userEmail }: PortalSidebarProps) {
           </p>
         )}
         <div className="flex items-center gap-1">
+          {features?.multi_client && (
+            <Link
+              href="/clients"
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] transition-colors hover:bg-white/10 hover:text-sidebar-foreground",
+                pathname.startsWith("/clients") ? "text-sidebar-foreground" : "text-sidebar-muted"
+              )}
+            >
+              <Users className="h-3.5 w-3.5" />
+              Clients
+            </Link>
+          )}
           <Link
             href="/settings"
             className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] text-sidebar-muted transition-colors hover:bg-white/10 hover:text-sidebar-foreground"
