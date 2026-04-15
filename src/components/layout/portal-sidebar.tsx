@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Brain,
-  Search,
+  Users,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ClientSwitcher } from "@/components/layout/client-switcher";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TEMPLATE NOTE: Add new navigation items here when migrating systems.
@@ -23,7 +24,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Brand Intelligence", href: "/brand-intelligence", icon: Brain },
-  { name: "Competitor Analysis", href: "/competitor-analysis", icon: Search },
 ];
 
 type PortalSidebarProps = {
@@ -33,7 +33,7 @@ type PortalSidebarProps = {
   userEmail?: string;
 };
 
-export function PortalSidebar({ brandName, userEmail }: PortalSidebarProps) {
+export function PortalSidebar({ brandName, features, userEmail }: PortalSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -57,7 +57,7 @@ export function PortalSidebar({ brandName, userEmail }: PortalSidebarProps) {
               className="rounded-xl transition-all duration-200 group-hover/sf:brightness-110"
             />
           </div>
-          <span className="text-sm font-light text-sidebar-muted">×</span>
+          <span className="text-sm font-light text-sidebar-muted">&times;</span>
           <div className="group/cl rounded-xl transition-all duration-200 hover:scale-105">
             <Image
               src="/client-logo.png"
@@ -71,6 +71,9 @@ export function PortalSidebar({ brandName, userEmail }: PortalSidebarProps) {
       </div>
 
       <div className="mx-5 h-px bg-white/10" />
+
+      {/* Client Switcher (multi-client portals only) */}
+      {features?.multi_client && <ClientSwitcher />}
 
       {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">

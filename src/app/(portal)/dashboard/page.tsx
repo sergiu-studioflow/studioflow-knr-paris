@@ -1,4 +1,4 @@
-import { Brain, Search, Sparkles, Lock } from "lucide-react";
+import { Brain, Sparkles, Lock } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -16,12 +16,6 @@ export default function DashboardPage() {
       href: "/brand-intelligence",
       icon: Brain,
       description: "Brand knowledge base, positioning documents, and strategic intelligence",
-    },
-    {
-      name: "Competitor Analysis",
-      href: "/competitor-analysis",
-      icon: Search,
-      description: "Scrape competitor ads, AI analysis, intelligence reports, and creative briefs",
     },
   ];
 

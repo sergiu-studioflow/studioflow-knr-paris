@@ -114,7 +114,7 @@ function OverviewTab({ client }: { client: Client }) {
         <h3 className="font-medium">Client Details</h3>
         <dl className="space-y-3 text-sm">
           <Row label="Name" value={client.clientName} />
-          <Row label="Slug" value={client.clientSlug} mono />
+          <Row label="Slug" value={client.clientSlug || ""} mono />
           {client.website && <Row label="Website" value={client.website} />}
           {client.category && <Row label="Category" value={client.category} />}
           {client.primaryMarket && <Row label="Market" value={client.primaryMarket} />}
