@@ -36,6 +36,10 @@ export function ClientProductsTable({ clientSlug }: { clientSlug: string }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  // Convert to 9:16
+  const [converting, setConverting] = useState(false);
+  const [convertResult, setConvertResult] = useState<{ converted: number; skipped: number; errors: number } | null>(null);
+
   const load = useCallback(() => {
     setLoading(true);
     fetch(`/api/clients/${clientSlug}/products`)
@@ -157,6 +161,31 @@ export function ClientProductsTable({ clientSlug }: { clientSlug: string }) {
     }
   };
 
+  const handleConvertAll = async () => {
+    const eligible = products.filter((p) => p.imageUrl && !p.videoImageUrl);
+    if (eligible.length === 0) return;
+    setConverting(true);
+    setConvertResult(null);
+    try {
+      const res = await fetch(`/api/clients/${clientSlug}/products/convert-video-image`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productIds: eligible.map((p) => p.id) }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setConvertResult({ converted: data.converted, skipped: data.skipped, errors: data.errors });
+        load();
+      }
+    } catch (err) {
+      console.error("[convert]", err);
+    } finally {
+      setConverting(false);
+    }
+  };
+
+  const eligibleForConvert = products.filter((p) => p.imageUrl && !p.videoImageUrl).length;
+
   return (
     <Card>
       <CardHeader
@@ -180,6 +209,16 @@ export function ClientProductsTable({ clientSlug }: { clientSlug: string }) {
             {selected.size > 0 && (
               <Button variant="destructive" size="sm" onClick={() => setConfirmDelete(true)}>
                 <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Delete {selected.size}
+              </Button>
+            )}
+            {eligibleForConvert > 0 && (
+              <Button size="sm" variant="outline" onClick={handleConvertAll} disabled={converting}>
+                {converting ? (
+                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Video className="mr-1.5 h-3.5 w-3.5" />
+                )}
+                {converting ? "Converting..." : `Convert ${eligibleForConvert} to 9:16`}
               </Button>
             )}
             <Button size="sm" variant="outline" onClick={() => setShowAdd(!showAdd)}>
@@ -210,6 +249,21 @@ export function ClientProductsTable({ clientSlug }: { clientSlug: string }) {
                 {adding ? "Adding..." : "Add Product"}
               </Button>
             </form>
+          )}
+
+          {/* Convert result banner */}
+          {convertResult && (
+            <div className="mb-4 flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 p-3">
+              <Video className="h-4 w-4 text-primary shrink-0" />
+              <p className="text-xs text-foreground">
+                <span className="font-semibold">{convertResult.converted}</span> converted to 9:16
+                {convertResult.skipped > 0 && <>, <span className="font-semibold">{convertResult.skipped}</span> skipped</>}
+                {convertResult.errors > 0 && <>, <span className="font-semibold text-destructive">{convertResult.errors}</span> errors</>}
+              </p>
+              <button onClick={() => setConvertResult(null)} className="ml-auto text-muted-foreground hover:text-foreground">
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
           )}
 
           {/* Products list */}
