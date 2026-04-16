@@ -334,3 +334,57 @@ export const clientStaticAdConfig = pgTable("client_static_ad_config", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+// =============================================
+// VIDEO GENERATION SYSTEM
+// =============================================
+
+export const characters = pgTable("characters", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => clients.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  imageUrl: text("image_url").notNull(),
+  description: text("description"),
+  status: text("status").notNull().default("ready"),
+  kieTaskId: text("kie_task_id"),
+  sourceImageUrl: text("source_image_url"),
+  errorMessage: text("error_message"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const scenes = pgTable("scenes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().references(() => clients.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  imageUrl: text("image_url").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const videoGenerations = pgTable("video_generations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
+  userId: uuid("user_id").references(() => users.id),
+  productId: uuid("product_id").references(() => clientProducts.id, { onDelete: "set null" }),
+  productName: text("product_name"),
+  videoType: text("video_type").notNull().default("ugc"),
+  arollStyle: text("aroll_style"),
+  hasCharacter: boolean("has_character").notNull().default(false),
+  script: text("script"),
+  duration: integer("duration").notNull().default(15),
+  aspectRatio: text("aspect_ratio").notNull().default("9:16"),
+  crafterPrompt: text("crafter_prompt"),
+  studioFlowPrompt: text("studio_flow_prompt"),
+  cleanedPrompt: text("cleaned_prompt"),
+  finalPrompt: text("final_prompt"),
+  voiceCleanedPrompt: text("voice_cleaned_prompt"),
+  muapiRequestId: text("muapi_request_id"),
+  videoUrl: text("video_url"),
+  status: text("status").notNull().default("pending"),
+  errorMessage: text("error_message"),
+  currentStep: integer("current_step").default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});

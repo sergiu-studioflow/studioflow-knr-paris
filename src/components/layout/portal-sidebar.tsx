@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Brain,
   ImageIcon,
+  Video,
   Users,
   Settings,
   LogOut,
@@ -18,8 +19,9 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { ClientSwitcher } from "@/components/layout/client-switcher";
 import { useClient } from "@/lib/client-context";
 
-// Clients that have the Static Ad System enabled
+// Clients that have systems enabled
 const STATIC_AD_CLIENTS = ["balcon-avec-vue", "doamabijoux", "eco-sense", "modalova", "taion"];
+const VIDEO_CLIENTS = ["balcon-avec-vue", "doamabijoux", "eco-sense", "modalova", "taion"];
 
 const baseNavigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -42,6 +44,9 @@ export function PortalSidebar({ brandName, features, userEmail }: PortalSidebarP
     ...baseNavigation,
     ...(STATIC_AD_CLIENTS.includes(clientSlug)
       ? [{ name: "Static Ad System", href: "/static-ads", icon: ImageIcon }]
+      : []),
+    ...(VIDEO_CLIENTS.includes(clientSlug)
+      ? [{ name: "Video Generation", href: "/video-generation", icon: Video }]
       : []),
   ];
 
