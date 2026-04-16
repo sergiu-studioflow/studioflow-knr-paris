@@ -1,4 +1,4 @@
-import { Brain, Sparkles, Lock } from "lucide-react";
+import { Brain, ImageIcon, Video, Target, FileText, Sparkles, Lock } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +16,30 @@ export default function DashboardPage() {
       href: "/brand-intelligence",
       icon: Brain,
       description: "Brand knowledge base, positioning documents, and strategic intelligence",
+    },
+    {
+      name: "Static Ad System",
+      href: "/static-ads",
+      icon: ImageIcon,
+      description: "AI-powered static ad generation with reference-based creative pipeline",
+    },
+    {
+      name: "Video Generation",
+      href: "/video-generation",
+      icon: Video,
+      description: "UGC, B-Roll, and A-Roll video generation with 6-step AI pipeline",
+    },
+    {
+      name: "Competitor Research",
+      href: "/competitor-ads",
+      icon: Target,
+      description: "Track and analyze competitor ads across Meta, TikTok, and Instagram",
+    },
+    {
+      name: "Research Briefs",
+      href: "/research-briefs",
+      icon: FileText,
+      description: "AI-generated creative briefs from competitor research insights",
     },
   ];
 

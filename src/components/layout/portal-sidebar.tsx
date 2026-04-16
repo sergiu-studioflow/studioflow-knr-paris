@@ -8,6 +8,8 @@ import {
   Brain,
   ImageIcon,
   Video,
+  Target,
+  FileText,
   Users,
   Settings,
   LogOut,
@@ -22,6 +24,7 @@ import { useClient } from "@/lib/client-context";
 // Clients that have systems enabled
 const STATIC_AD_CLIENTS = ["balcon-avec-vue", "doamabijoux", "eco-sense", "modalova", "taion"];
 const VIDEO_CLIENTS = ["balcon-avec-vue", "doamabijoux", "eco-sense", "modalova", "taion"];
+const RESEARCH_CLIENTS = ["balcon-avec-vue", "doamabijoux", "eco-sense", "modalova", "taion"];
 
 const baseNavigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -47,6 +50,12 @@ export function PortalSidebar({ brandName, features, userEmail }: PortalSidebarP
       : []),
     ...(VIDEO_CLIENTS.includes(clientSlug)
       ? [{ name: "Video Generation", href: "/video-generation", icon: Video }]
+      : []),
+    ...(RESEARCH_CLIENTS.includes(clientSlug)
+      ? [
+          { name: "Competitor Research", href: "/competitor-ads", icon: Target },
+          { name: "Research Briefs", href: "/research-briefs", icon: FileText },
+        ]
       : []),
   ];
 
