@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Brain,
+  ImageIcon,
   Users,
   Settings,
   LogOut,
@@ -15,13 +16,12 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ClientSwitcher } from "@/components/layout/client-switcher";
+import { useClient } from "@/lib/client-context";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TEMPLATE NOTE: Add new navigation items here when migrating systems.
-// Copy the nav item pattern and add the route + icon.
-// ─────────────────────────────────────────────────────────────────────────────
+// Clients that have the Static Ad System enabled
+const STATIC_AD_CLIENTS = ["balcon-avec-vue", "doamabijoux", "eco-sense", "modalova", "taion"];
 
-const navigation = [
+const baseNavigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Brand Intelligence", href: "/brand-intelligence", icon: Brain },
 ];
@@ -36,6 +36,14 @@ type PortalSidebarProps = {
 export function PortalSidebar({ brandName, features, userEmail }: PortalSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { clientSlug } = useClient();
+
+  const navigation = [
+    ...baseNavigation,
+    ...(STATIC_AD_CLIENTS.includes(clientSlug)
+      ? [{ name: "Static Ad System", href: "/static-ads", icon: ImageIcon }]
+      : []),
+  ];
 
   async function handleSignOut() {
     await authClient.signOut();

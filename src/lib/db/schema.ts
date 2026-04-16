@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, timestamp, uuid, jsonb, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, boolean, timestamp, uuid, jsonb, integer, uniqueIndex } from "drizzle-orm/pg-core";
 
 // =============================================
 // API KEYS (client-configurable, encrypted at rest)
@@ -236,6 +236,101 @@ export const clientResearchSources = pgTable("client_research_sources", {
   identifier: text("identifier").notNull(),
   isActive: boolean("is_active").notNull().default(true),
   lastScrapedAt: timestamp("last_scraped_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// =============================================
+// STATIC AD GENERATION SYSTEM
+// =============================================
+
+export const adStyles = pgTable("ad_styles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  masterPrompt: text("master_prompt").notNull(),
+  referenceImageUrl: text("reference_image_url"),
+  thumbnailUrl: text("thumbnail_url"),
+  aspectRatio: text("aspect_ratio").notNull().default("1:1"),
+  isActive: boolean("is_active").notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const adStylePrompts = pgTable("ad_style_prompts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  adStyleId: uuid("ad_style_id").notNull().references(() => adStyles.id, { onDelete: "cascade" }),
+  productId: uuid("product_id").notNull().references(() => clientProducts.id, { onDelete: "cascade" }),
+  prompt: text("prompt").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const staticAdGenerations = pgTable("static_ad_generations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => users.id),
+  clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
+  adStyleId: uuid("ad_style_id").references(() => adStyles.id),
+  productId: uuid("product_id").references(() => clientProducts.id, { onDelete: "set null" }),
+  styleName: text("style_name"),
+  productName: text("product_name"),
+  finalPrompt: text("final_prompt"),
+  kieJobId: text("kie_job_id"),
+  aspectRatio: text("aspect_ratio").notNull().default("1:1"),
+  resolution: text("resolution").default("1K"),
+  outputFormat: text("output_format").default("PNG"),
+  imageUrl: text("image_url"),
+  thumbnailUrl: text("thumbnail_url"),
+  status: text("status").notNull().default("pending"),
+  errorMessage: text("error_message"),
+  mode: text("mode").notNull().default("custom"),
+  referenceImageUrl: text("reference_image_url"),
+  adCopy: text("ad_copy"),
+  analysisJson: text("analysis_json"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const referenceAdLibrary = pgTable("reference_ad_library", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  imageUrl: text("image_url").notNull(),
+  industry: text("industry").notNull().default("beauty"),
+  adType: text("ad_type"),
+  brand: text("brand"),
+  tags: text("tags"),
+  airtableRecordId: text("airtable_record_id").unique(),
+  isActive: boolean("is_active").notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const winnersLibrary = pgTable("winners_library", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => users.id),
+  clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
+  name: text("name").notNull(),
+  imageUrl: text("image_url").notNull(),
+  sourceGenerationId: uuid("source_generation_id"),
+  productName: text("product_name"),
+  tags: text("tags"),
+  notes: text("notes"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const clientStaticAdConfig = pgTable("client_static_ad_config", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clientId: uuid("client_id").notNull().unique().references(() => clients.id, { onDelete: "cascade" }),
+  agent1Prompt: text("agent1_prompt").notNull(),
+  agent2Prompt: text("agent2_prompt").notNull(),
+  brandLogoUrl: text("brand_logo_url"),
+  allowedIndustries: text("allowed_industries").default("[]"),
+  isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
