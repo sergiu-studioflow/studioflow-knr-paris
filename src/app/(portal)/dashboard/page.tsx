@@ -1,4 +1,4 @@
-import { Brain, ImageIcon, Video, Target, FileText, Sparkles, Lock } from "lucide-react";
+import { Brain, ImageIcon, Video, Target, FileText, Package } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -41,14 +41,11 @@ export default function DashboardPage() {
       icon: FileText,
       description: "AI-generated creative briefs from competitor research insights",
     },
-  ];
-
-  const plannedSystems = [
-    // Placeholder — replace with real system cards after migration
     {
-      name: "Coming Soon",
-      icon: Sparkles,
-      description: "Your next AI-powered system will appear here",
+      name: "Products",
+      href: "/clients",
+      icon: Package,
+      description: "Product catalogues with images, descriptions, and 9:16 video conversion",
     },
   ];
 
@@ -61,7 +58,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {liveSystems.map((system, i) => (
           <Link
             key={system.href}
@@ -84,34 +81,6 @@ export default function DashboardPage() {
               </div>
             </div>
           </Link>
-        ))}
-
-        {plannedSystems.map((system, i) => (
-          <div
-            key={system.name}
-            className="animate-fade-up relative rounded-xl border border-border bg-card p-7 select-none"
-            style={{ animationDelay: `${(liveSystems.length + i + 1) * 80}ms` }}
-          >
-            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl gap-1.5 z-10">
-              <Lock className="h-4 w-4 text-muted-foreground/60" />
-              <span className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/60">
-                Planned
-              </span>
-            </div>
-            <div className="flex items-start gap-4 opacity-30 blur-[2px] pointer-events-none">
-              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-muted">
-                <system.icon className="h-6 w-6 text-muted-foreground" />
-              </div>
-              <div>
-                <h2 className="text-[15px] font-bold tracking-tight text-foreground">
-                  {system.name}
-                </h2>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  {system.description}
-                </p>
-              </div>
-            </div>
-          </div>
         ))}
       </div>
     </div>
