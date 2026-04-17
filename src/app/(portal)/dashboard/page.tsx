@@ -1,4 +1,4 @@
-import { Brain, ImageIcon, Video, Target, FileText, Package } from "lucide-react";
+import { Brain, ImageIcon, Video, Target, FileText } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -40,12 +40,6 @@ export default function DashboardPage() {
       href: "/research-briefs",
       icon: FileText,
       description: "AI-generated creative briefs from competitor research insights",
-    },
-    {
-      name: "Products",
-      href: "/clients",
-      icon: Package,
-      description: "Product catalogues with images, descriptions, and 9:16 video conversion",
     },
   ];
 
