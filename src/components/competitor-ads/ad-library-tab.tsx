@@ -120,7 +120,11 @@ export function AdLibraryTab({
       const res = await fetch("/api/competitor-ads/refresh", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sourceId: selectedSourceId, clientId }),
+        body: JSON.stringify({
+          sourceId: selectedSourceId,
+          clientId,
+          country: sources.find(s => s.id === selectedSourceId)?.country || "ALL",
+        }),
       });
       const data = await res.json();
 

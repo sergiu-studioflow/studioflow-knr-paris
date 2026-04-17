@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const competitorId = body.competitorId || body.sourceId;
   const clientId = body.clientId;
+  const country = (body.country || "ALL").trim().toUpperCase();
   if (!competitorId) {
     return NextResponse.json({ error: "Missing competitorId" }, { status: 400 });
   }
@@ -45,7 +46,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Build Meta Library URL from page ID
-  const metaLibraryUrl = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${"GB"}&view_all_page_id=${competitor.metaPageId}&search_type=page&media_type=all`;
+  const metaLibraryUrl = `https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=${encodeURIComponent(country)}&view_all_page_id=${competitor.metaPageId}&search_type=page&media_type=all`;
 
   const config = await getAppConfig();
   const wfConfig = config?.workflows?.competitor_ads_scraper as string | { webhook_path?: string; n8n_base_url?: string } | undefined;
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify([
         {
           meta_library_url: metaLibraryUrl,
-          country: "GB",
+          country,
           client_id: clientId,
         },
       ]),
