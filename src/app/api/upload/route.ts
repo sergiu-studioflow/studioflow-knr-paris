@@ -45,7 +45,11 @@ export async function POST(req: NextRequest) {
       }
 
       const ext = filename.split(".").pop() || "bin";
-      const key = `brands/${brandSlug || process.env.BRAND_SLUG || "default"}/${assetType || "uploads"}/${uuid()}.${ext}`;
+      const slug = ((brandSlug as string) || process.env.BRAND_SLUG || "default").trim();
+      if (!SLUG_RE.test(slug)) return NextResponse.json({ error: `Invalid brand slug ${JSON.stringify(slug)}` }, { status: 400 });
+      const safeAssetType = (assetType || "uploads").trim();
+      if (!/^[a-z0-9-]+$/.test(safeAssetType)) return NextResponse.json({ error: `Invalid assetType ${JSON.stringify(assetType)}` }, { status: 400 });
+      const key = `brands/${slug}/${safeAssetType}/${uuid()}.${ext}`;
       const presignedUrl = await getPresignedUploadUrl(key, fileType);
       const publicUrl = `${process.env.R2_PUBLIC_URL}/${key}`;
 
