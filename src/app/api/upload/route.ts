@@ -3,6 +3,8 @@ import { requireAuth, isAuthError } from "@/lib/auth";
 import { getPresignedUploadUrl, uploadToR2 } from "@/lib/r2";
 import { v4 as uuid } from "uuid";
 
+
+const SLUG_RE = /^[a-z0-9][a-z0-9/-]*$/;
 export const dynamic = "force-dynamic";
 
 const ALLOWED_TYPES = [
