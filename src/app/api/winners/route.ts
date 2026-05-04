@@ -6,6 +6,7 @@ import { eq, and } from "drizzle-orm";
 import { uploadToR2, toAccessibleUrl } from "@/lib/r2";
 import { v4 as uuid } from "uuid";
 import { r2Prefix } from "@/lib/static-ads/config";
+import { getClientStoragePrefix } from "@/lib/client-api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +55,7 @@ export async function POST(req: NextRequest) {
   const tags = (formData.get("tags") as string) || null;
   const notes = (formData.get("notes") as string) || null;
   const productName = (formData.get("productName") as string) || null;
+  const clientId = (formData.get("clientId") as string) || null;
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -65,13 +67,15 @@ export async function POST(req: NextRequest) {
   }
 
   const ext = file.name.split(".").pop() || "jpeg";
-  const key = `${r2Prefix("winners-library")}/${uuid()}.${ext}`;
+  const clientPrefix = clientId ? await getClientStoragePrefix(clientId) : null;
+  const basePrefix = clientPrefix ? `${clientPrefix}/winners-library` : r2Prefix("winners-library");
+  const key = `${basePrefix}/${uuid()}.${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
   const imageUrl = await uploadToR2(key, buffer, file.type);
 
   const [winner] = await db
     .insert(schema.winnersLibrary)
-    .values({ userId: portalUser.id, name, imageUrl, tags, notes, productName })
+    .values({ userId: portalUser.id, clientId, name, imageUrl, tags, notes, productName })
     .returning();
 
   return NextResponse.json(winner, { status: 201 });
