@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     if (isAuthError(authResult)) return authResult;
 
     const body = await req.json();
-    const { adStyleId, productId, aspectRatio } = body;
+    const { adStyleId, productId, aspectRatio, clientId: bodyClientId } = body;
 
     if (!adStyleId) {
       return NextResponse.json({ error: "adStyleId is required" }, { status: 400 });
@@ -43,6 +43,12 @@ export async function POST(req: NextRequest) {
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Resolve clientId from body (preferred) or product (fallback). Validate match if both.
+    const clientId = (bodyClientId as string | undefined) || product.clientId;
+    if (bodyClientId && product.clientId !== bodyClientId) {
+      return NextResponse.json({ error: "Product belongs to a different client" }, { status: 403 });
     }
 
     if (!product.imageUrl) {
@@ -77,6 +83,7 @@ export async function POST(req: NextRequest) {
       .insert(schema.staticAdGenerations)
       .values({
         userId: authResult.portalUser.id,
+        clientId,
         adStyleId: style.id,
         productId: product.id,
         styleName: style.name,
