@@ -184,8 +184,16 @@ export function CharactersLibrary() {
 
       const formData = new FormData();
       formData.append("file", resizedFile);
-      // brandSlug resolved server-side via BRAND_SLUG env var
-      formData.append("assetType", "video-generation/characters");
+      // In multi-client portals, clientId resolves the per-client storage prefix
+      // (brands/<agency>/<client>/...). In single-brand portals it's null and the
+      // route falls back to BRAND_SLUG env var.
+      if (clientId) formData.append("clientId", clientId);
+      // "gen" uploads are reference inputs to AI generation, not library entries —
+      // keep them under characters/uploaded/ so they're separable from final images.
+      const assetType = target === "gen"
+        ? "video-generation/characters/uploaded"
+        : "video-generation/characters";
+      formData.append("assetType", assetType);
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: `Upload failed (${res.status})` }));
