@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Brain, Building2 } from "lucide-react";
+import { Brain, Building2, ShieldAlert, FileText, Package } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ClientBrandIntelEditor } from "@/components/clients/client-brand-intel-editor";
 import { ClientComplianceEditor } from "@/components/clients/client-compliance-editor";
 import { ClientProductsTable } from "@/components/clients/client-products-table";
@@ -44,9 +45,43 @@ export default function BrandIntelligencePage() {
           </div>
         </section>
 
-        <ClientComplianceEditor clientSlug={clientSlug} />
-        <ClientBrandIntelEditor clientSlug={clientSlug} />
-        <ClientProductsTable clientSlug={clientSlug} />
+        <Tabs defaultValue="brand-doc" className="space-y-5">
+          <TabsList className="inline-flex h-auto items-center gap-1 rounded-full border border-border bg-card/70 p-1 shadow-xs backdrop-blur-sm">
+            <TabsTrigger
+              value="brand-doc"
+              className="group inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-card"
+            >
+              <FileText className="h-3.5 w-3.5" />
+              Brand Document
+            </TabsTrigger>
+            <TabsTrigger
+              value="compliance"
+              className="group inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-card"
+            >
+              <ShieldAlert className="h-3.5 w-3.5" />
+              Compliance
+            </TabsTrigger>
+            <TabsTrigger
+              value="products"
+              className="group inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-card"
+            >
+              <Package className="h-3.5 w-3.5" />
+              Products
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="brand-doc" className="mt-0 animate-fade-up">
+            <ClientBrandIntelEditor clientSlug={clientSlug} />
+          </TabsContent>
+
+          <TabsContent value="compliance" className="mt-0 animate-fade-up">
+            <ClientComplianceEditor clientSlug={clientSlug} />
+          </TabsContent>
+
+          <TabsContent value="products" className="mt-0 animate-fade-up">
+            <ClientProductsTable clientSlug={clientSlug} />
+          </TabsContent>
+        </Tabs>
       </div>
     );
   }

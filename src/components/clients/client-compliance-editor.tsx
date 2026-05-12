@@ -10,7 +10,7 @@ import { Loader2, ShieldAlert, Pencil, Save, X, ChevronRight } from "lucide-reac
 export function ClientComplianceEditor({ clientSlug }: { clientSlug: string }) {
   const [rules, setRules] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
   const [saving, setSaving] = useState(false);

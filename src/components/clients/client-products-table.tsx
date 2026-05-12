@@ -19,7 +19,7 @@ export function ClientProductsTable({ clientSlug }: { clientSlug: string }) {
   const { clientId } = useClient();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   // Add
