@@ -87,7 +87,7 @@ export const users = pgTable("users", {
 export const appConfig = pgTable("app_config", {
   id: uuid("id").primaryKey().defaultRandom(),
   brandName: text("brand_name").notNull(),
-  brandColor: text("brand_color").default("#b2ff00"),
+  brandColor: text("brand_color").default("#A1824F"),
   logoUrl: text("logo_url"),
   portalTitle: text("portal_title"),
   features: jsonb("features").notNull().default({}),
@@ -151,6 +151,7 @@ export const brands = pgTable("brands", {
   storagePrefix: text("storage_prefix").notNull().default(""),
   settings: jsonb("settings").notNull().default({}),
   notes: text("notes"),
+  complianceRules: text("compliance_rules"),
   provisionedAt: timestamp("provisioned_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

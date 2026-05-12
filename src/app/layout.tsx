@@ -1,21 +1,41 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Roboto, Roboto_Mono, DM_Sans } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
+  weight: ["400", "500", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const robotoMono = Roboto_Mono({
+  variable: "--font-roboto-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
+
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600"],
+});
+
+export const viewport: Viewport = {
+  themeColor: "#0A0000",
+};
 
 export const metadata: Metadata = {
-  title: "KNR Paris",
-  description: "KNR Paris Creative Studio",
+  title: "KNR Paris Creative Studio",
+  description:
+    "KNR Paris' internal creative operations studio — brand intelligence, competitor research, static ads, and video generation for our luxury fashion and beauty clients.",
+  openGraph: {
+    title: "KNR Paris Creative Studio",
+    description:
+      "KNR Paris' internal creative operations studio — brand intelligence, competitor research, static ads, and video generation for our luxury fashion and beauty clients.",
+    images: ["/knr-paris-logo.png"],
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -26,12 +46,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.variable} ${robotoMono.variable} ${dmSans.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange={false}
         >
           {children}

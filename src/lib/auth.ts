@@ -46,7 +46,7 @@ export const auth = betterAuth({
               <p style="font-size: 15px; color: #111; margin-bottom: 24px;">
                 Click the button below to sign in to your portal. This link expires in 24 hours.
               </p>
-              <a href="${url}" style="display: inline-block; background: #b2ff00; color: #000; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-size: 14px; font-weight: 500;">
+              <a href="${url}" style="display: inline-block; background: #0A0000; color: #EFE8DC; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; font-weight: 500;">
                 Sign in to your portal
               </a>
               <p style="margin-top: 24px; font-size: 13px; color: #666;">

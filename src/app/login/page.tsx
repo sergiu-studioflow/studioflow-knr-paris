@@ -35,21 +35,29 @@ export default function LoginPage() {
       <div className="animate-fade-up w-full max-w-[380px] space-y-8 px-4">
         {/* Logo / Brand */}
         <div className="text-center">
-          <div className="mx-auto flex items-center justify-center gap-3">
-            <Image src="/studioflow-logo.png" alt="StudioFlow" width={40} height={40} className="rounded-xl" />
-            <span className="text-sm font-light text-muted-foreground">×</span>
-            <Image src="/client-logo.png" alt="Client" width={40} height={40} className="rounded-xl" />
+          <div className="mx-auto flex items-center justify-center">
+            <Image
+              src="/knr-paris-logo.png"
+              alt="KNR Paris"
+              width={200}
+              height={52}
+              priority
+              className="h-auto w-[200px] invert dark:invert-0"
+            />
           </div>
-          <h1 className="mt-5 text-xl font-semibold tracking-tight text-foreground">
-            Welcome back
+          <h1 className="mt-8 text-xl font-semibold tracking-tight text-foreground">
+            Welcome to your{" "}
+            <span className="font-display text-[1.4em] tracking-[-0.03em] text-primary">
+              Creative Studio
+            </span>
           </h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">
-            Sign in to your creative studio
+          <p className="mt-2 text-sm text-muted-foreground">
+            Sign in with your work email.
           </p>
         </div>
 
         {sent ? (
-          <div className="animate-fade-in rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-center dark:border-emerald-800 dark:bg-emerald-950">
+          <div className="animate-fade-in rounded-md border border-emerald-200 bg-emerald-50 p-5 text-center dark:border-emerald-800 dark:bg-emerald-950">
             <Mail className="mx-auto h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             <p className="mt-3 text-sm font-medium text-emerald-800 dark:text-emerald-200">
               Check your email
@@ -69,9 +77,9 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
+                placeholder="you@knr.agency"
                 required
-                className="mt-1.5 block w-full rounded-lg border border-input bg-card px-3.5 py-2.5 text-sm text-foreground shadow-xs placeholder:text-muted-foreground transition-all duration-150 focus:border-primary/30 focus:outline-none focus:ring-2 focus:ring-primary/10"
+                className="mt-1.5 block w-full rounded-md border border-input bg-card px-3.5 py-2.5 text-sm text-foreground shadow-xs placeholder:text-muted-foreground transition-all duration-150 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/15"
               />
             </div>
 
@@ -82,7 +90,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-xs transition-all duration-150 hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-xs transition-all duration-150 hover:opacity-90 active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
