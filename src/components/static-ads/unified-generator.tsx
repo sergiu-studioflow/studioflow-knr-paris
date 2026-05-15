@@ -69,7 +69,7 @@ function buildSteps(currentStep: number): Step[] {
 }
 
 export function UnifiedGenerator({ products, onGalleryRefresh, onEditAd }: UnifiedGeneratorProps) {
-  const { clientId } = useClient();
+  const { clientId, clientSlug } = useClient();
   const [selectedProductId, setSelectedProductId] = useState("");
   const [referenceMode, setReferenceMode] = useState<ReferenceMode>("auto");
   const [uploadedRefUrl, setUploadedRefUrl] = useState<string | null>(null);
@@ -424,6 +424,7 @@ export function UnifiedGenerator({ products, onGalleryRefresh, onEditAd }: Unifi
               onRemove={() => setUploadedRefUrl(null)}
               uploadedUrl={uploadedRefUrl}
               disabled={isProcessing}
+              clientSlug={clientSlug}
             />
           )}
 
