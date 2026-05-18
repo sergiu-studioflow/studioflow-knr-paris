@@ -116,6 +116,7 @@ export function ScenesLibrary() {
       formData.append("file", resizedFile);
       // brandSlug resolved server-side via BRAND_SLUG env var
       formData.append("assetType", "video-generation/scenes");
+      if (clientId) formData.append("clientId", clientId);
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) {
         const err = await res.json().catch(() => ({ error: `Upload failed (${res.status})` }));
